@@ -2,8 +2,8 @@
 Coursework and handy reference.
 
 ## Using This Project
-To get started, open either the [GitBook page]() or the individual Markdown files in `docs/`. All sample projects are
-provided under `samples/`.
+To get started, open either the [GitBook page](https://emberwalker.gitbooks.io/dependency-injection/content/docs/1-introduction.html)
+or the individual Markdown files in `docs/`. All sample projects are provided under `samples/`.
 
 ## Built With
 - [Spark Java](http://sparkjava.com/) (micro web framework)
