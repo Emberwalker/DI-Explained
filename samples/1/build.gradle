@@ -1,0 +1,27 @@
+// Build file
+
+plugins {
+  id 'application'
+  id 'idea'
+  id 'eclipse'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+group = 'com.github.ac31007_group_8.quiz'
+version = '0.0.1'
+mainClassName = 'com.github.ac31007_group_8.quiz.init.Main'
+
+dependencies {
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '1.3.9'
+    compile group: 'com.sparkjava', name: 'spark-core', version: '2.5.5'
+    compile group: 'com.sparkjava', name: 'spark-template-mustache', version: '2.5.5'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.13'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.1'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
