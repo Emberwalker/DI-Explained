@@ -12,8 +12,7 @@ the individual Markdown files in `docs/`. All sample projects are provided under
 * [Spark Java](http://sparkjava.com/) \(micro web framework\)
 * [Kotlin](https://kotlinlang.org/) by [Jetbrains](https://www.jetbrains.com/) \(Java-compatible programming language\)
 * [Guice](https://github.com/google/guice) by Google \(DI framework\)
+* [Xerial SQLite-JDBC](https://github.com/xerial/sqlite-jdbc) \(Java bindings for SQLite database engine\)
 * [JUnit](http://junit.org/junit4/) \(testing framework\)
+* [Gradle](https://gradle.org/) \(build system\)
 * [GitBook](https://www.gitbook.com/) \(manual generation\)
-
-
-
