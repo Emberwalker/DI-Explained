@@ -4,8 +4,8 @@ Coursework and handy reference.
 
 ## Using This Project
 
-To get started, open either the [GitBook page](https://emberwalker.gitbooks.io/dependency-injection/content/docs/1-introduction.html)  
-or the individual Markdown files in `docs/`. All sample projects are provided under `samples/` on [GitHub](https://github.com/Emberwalker/DI-Explained).
+To get started, open either the [GitBook page](https://emberwalker.gitbooks.io/dependency-injection/content/docs/1-introduction.html) or
+the individual Markdown files in `docs/`. All sample projects are provided under `samples/` on [GitHub](https://github.com/Emberwalker/DI-Explained).
 
 ## Built With
 
