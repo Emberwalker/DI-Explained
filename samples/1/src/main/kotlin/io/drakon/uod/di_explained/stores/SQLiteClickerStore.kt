@@ -24,8 +24,9 @@ class SQLiteClickerStore(dbPath: String = SQLiteClickerStore.DEFAULT_DB_PATH): I
     }
 
     private fun setupDB() {
-        val stmt = conn.createStatement()
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS scores (uuid string PRIMARY KEY, score int);")
+        conn.createStatement().use {
+            it.executeUpdate("CREATE TABLE IF NOT EXISTS scores (uuid string PRIMARY KEY, score int);")
+        }
     }
 
     override fun getScore(uuid: String): Int {
