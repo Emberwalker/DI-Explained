@@ -9,7 +9,7 @@
 # Gradle
 .gradle/
 build/
-!/gradle/wrapper/*
+!gradle-wrapper.jar
 
 # Eclipse
 .classpath
@@ -25,3 +25,4 @@ build/
 # General test run stuff
 run/
 out/
+*.sqlite

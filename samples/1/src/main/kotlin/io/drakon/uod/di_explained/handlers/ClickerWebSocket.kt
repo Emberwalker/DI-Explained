@@ -1,6 +1,8 @@
 package io.drakon.uod.di_explained.handlers
 
 import com.google.gson.GsonBuilder
+import io.drakon.uod.di_explained.stores.IClickerStore
+import io.drakon.uod.di_explained.stores.SQLiteClickerStore
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.*
 import org.slf4j.LoggerFactory
@@ -14,15 +16,13 @@ class ClickerWebSocket {
 
     private val LOGGER = LoggerFactory.getLogger(this.javaClass)
     private val sessionUUIDs = ConcurrentHashMap<Session, String>()
+    private val clickerStore: IClickerStore = SQLiteClickerStore()
 
     @OnWebSocketConnect
     fun connected(session: Session) {
         LOGGER.debug("WebSocket connected. (Session: {})", session.hashCode())
         val uuid = session.upgradeRequest.cookies.filter { it.name == "uuid" }.map { it.value }.firstOrNull()
-        if (uuid != null) {
-            sessionUUIDs.put(session, uuid)
-            LOGGER.debug("WS Request contained UUID cookie: {} -> {}", uuid, session.hashCode())
-        }
+        if (uuid != null) announce(session, uuid)
     }
 
     @OnWebSocketClose
@@ -41,30 +41,42 @@ class ClickerWebSocket {
         try {
             val base = GSON.fromJson(msg, WSMessageBase::class.java)
             when (base.type.toLowerCase()) {
-                "announce" -> handleAnnounce(session, GSON.fromJson(msg, WSMessageAnnounce::class.java))
-                "click" -> handleClick(session)
+                "announce" -> announce(session, GSON.fromJson(msg, WSMessageAnnounce::class.java).uuid)
+                "click" -> click(session)
                 else -> session.send(WSResponseError("invalid_msg_type"))
             }
         } catch (ex: Exception) {
-            // TODO make more specific.
             session.send(WSResponseError("parse_error"))
             LOGGER.error("Error parsing JSON response.", ex)
         }
     }
 
-    private fun handleAnnounce(session: Session, annMsg: WSMessageAnnounce) {
-        sessionUUIDs.put(session, annMsg.uuid)
-        LOGGER.debug("WS Announce: {} -> {}", annMsg.uuid, session.hashCode())
+    private fun announce(session: Session, uuid: String) {
+        sessionUUIDs.put(session, uuid)
+        LOGGER.debug("WS Announce: {} -> {}", uuid, session.hashCode())
         session.send(WSResponseAnnounce())
+        sendScore(session)
     }
 
-    private fun handleClick(session: Session) {
+    private fun click(session: Session) {
         val uuid = sessionUUIDs[session]
         if (uuid == null) {
             session.send(WSResponseError("unannounced"))
             return
         }
-        // TODO
+        clickerStore.incrementScore(uuid)
+        sendScore(session)
+    }
+
+    private fun sendScore(session: Session) {
+        val uuid = sessionUUIDs[session]
+        val score: Int
+        if (uuid == null) {
+            score = 0
+        } else {
+            score = clickerStore.getScore(uuid)
+        }
+        session.send(WSResponseScore(score))
     }
 
     companion object {
@@ -74,8 +86,9 @@ class ClickerWebSocket {
         private data class WSMessageAnnounce(val type: String, val uuid: String)
         private data class WSResponseAnnounce(val type: String = "announce_ack")
         private data class WSResponseError(val reason: String, val type: String = "error")
+        private data class WSResponseScore(val score: Int, val type: String = "score")
 
-        // Extension methods are awesome.
+        // Extension method to make sending messages back simpler.
         private fun Session.send(obj: Any) {
             this.remote.sendString(GSON.toJson(obj))
         }
