@@ -16,7 +16,7 @@ _Or: "Don't call us, we'll call you."_ ([source](https://en.wikipedia.org/wiki/I
 
 There are many approaches to solving this problem, but most of them fall under the umbrella phrase _Inversion of
 Control_. The principle behind inversion of control is to make client code not have a hard dependency on another
-component directly - instead it asks for an interface (in OOP terms), which is then fulfilled in at runtime by some
+component directly - instead it asks for an interface (in OOP terms), which is then fulfilled at runtime by some
 method. Dependency Injection is one of these methods, along with more infamous patterns like Factories, Service Locators
 and Strategies.
 
