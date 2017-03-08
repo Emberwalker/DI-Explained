@@ -23,7 +23,7 @@ class Main {
         staticFiles.location("/public")
 
         // Setup WebSocket routes
-        webSocket("/ws", ClickerWebSocket::class.java)
+        webSocket("/ws", ClickerWebSocket())
 
         // Setup before filter, which gets/sets client UUID
         before(Filter { request, response ->

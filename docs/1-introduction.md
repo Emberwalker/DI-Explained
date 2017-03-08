@@ -29,8 +29,25 @@ Useful things to note at this point:
 - We have a `LOGGER` object, created via slf4j's `LoggerFactory` specific to this class. This is good practice.
 - In `Main#start()`:
   - We elect to load static files from `src/main/resources/public`, if you need to modify frontend code.
-  - We attach our WebSocket handler class to `/ws`.
+  - We attach our WebSocket handler to `/ws`.
   - We assign all clients a UUID in a `before` filter. This will be used later to record separate clients via cookie.
   - We enable a 'route overview' at `/debug/routes` - more on this later.
   - We add our application routes using standard HTTP verbs, by using [Spark's routing methods](http://sparkjava.com/documentation.html#routes).
     - In particular, we stuff this UUID into a cookie so the WebSocket code client-side can identify to the server.
+
+## WebSocket Handling
+Next open `io.drakon.uod.di_explained.handlers.ClickerWebSocket` and look at the structure.
+
+As in our Main class, we have some basic essentials - a `LOGGER` object, and a bundle of methods.The `WebSocket`
+annotations are what Spark uses to identify which methods to call on events. In particular, make sure you understand
+the `connected` and `message` methods.
+
+In the `companion object` (the Kotlin equivalent of statics) you'll see a few Kotlin specific items. Data classes are
+what Java programmers tend to refer to as POJOs - simple objects whose sole purpose is to hold data. You'll also see
+that there's a method whose signature looks like `fun Session.send(...)` - this is an _extension method_, which attaches
+the defined method to an existing class defined elsewhere, in this case the Jetty session. Understanding extension
+methods is not important for this tutorial, but if you want to learn more, check out the
+[Kotlin documentation on the topic.](https://kotlinlang.org/docs/reference/extensions.html)
+
+## What Next?
+Next we'll take a look at the theory behind Dependency Injection, and its parent concept Inversion of Control.
