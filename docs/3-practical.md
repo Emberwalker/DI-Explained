@@ -28,8 +28,9 @@ And with the injections for the `IClickerHandler` added:
 class ClickerWebSocket @Inject constructor(private val handler: IClickerHandler) { ... }
 ```
 
-As you can see, it does slightly complicate the class signature, but this partially because we're defining class fields
-in the constructor, as is the Kotlin style. In Java, you would apply `@Inject` to your constructor method instead:
+As you can see, it does slightly complicate the class signature, but this is partially because we're defining class
+fields in the constructor, as is the Kotlin style. In Java, you would apply `@Inject` to your constructor method
+instead:
 ```java
 @Inject
 public ClickerWebSocket(IClickerHandler handler) {
