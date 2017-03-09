@@ -54,4 +54,6 @@ Given we're only injecting a couple components, why bother? In smaller applicati
 aids testing. In our case, we can now freely detach the database handler and attach a fake one during tests, as well
 as mock the `ClickerHandler` in general thanks to our separation of the handler from the WebSocket code.
 
-Look at the new tests added in this sample to see it in action!
+Look at the new test `ClickerHandler` added in this sample to see it in action! In real projects, injection can allow
+_vastly_ more tests to be written in this manner - hopefully this small, slightly contrived example demonstrates the
+principle though!
