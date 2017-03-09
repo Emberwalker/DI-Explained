@@ -1,8 +1,7 @@
 package io.drakon.uod.di_explained.handlers
 
 import com.google.gson.GsonBuilder
-import io.drakon.uod.di_explained.stores.IClickerStore
-import io.drakon.uod.di_explained.stores.SQLiteClickerStore
+import io.drakon.uod.di_explained.send
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.api.annotations.*
 import org.slf4j.LoggerFactory
@@ -16,7 +15,7 @@ class ClickerWebSocket {
 
     private val LOGGER = LoggerFactory.getLogger(this.javaClass)
     private val sessionUUIDs = ConcurrentHashMap<Session, String>()
-    private val clickerStore: IClickerStore = SQLiteClickerStore()
+    private val handler: IClickerHandler = ClickerHandler()
 
     @OnWebSocketConnect
     fun connected(session: Session) {
@@ -51,47 +50,24 @@ class ClickerWebSocket {
         }
     }
 
-    private fun announce(session: Session, uuid: String) {
-        sessionUUIDs.put(session, uuid)
-        LOGGER.debug("WS Announce: {} -> {}", uuid, session.hashCode())
-        session.send(WSResponseAnnounce())
-        sendScore(session)
-    }
-
     private fun click(session: Session) {
         val uuid = sessionUUIDs[session]
         if (uuid == null) {
             session.send(WSResponseError("unannounced"))
             return
         }
-        clickerStore.incrementScore(uuid)
-        sendScore(session)
+        handler.click(WSResponder(session), uuid)
     }
 
-    private fun sendScore(session: Session) {
-        val uuid = sessionUUIDs[session]
-        val score: Int
-        if (uuid == null) {
-            score = 0
-        } else {
-            score = clickerStore.getScore(uuid)
-        }
-        session.send(WSResponseScore(score))
+    private fun announce(session: Session, uuid: String) {
+        sessionUUIDs.put(session, uuid)
+        LOGGER.debug("WS Announce: {} -> {}", uuid, session.hashCode())
+        session.send(WSResponseAnnounce())
+        handler.sendScore(WSResponder(session), uuid)
     }
 
     companion object {
         private val GSON = GsonBuilder().setPrettyPrinting().create()
-
-        private data class WSMessageBase(val type: String)
-        private data class WSMessageAnnounce(val type: String, val uuid: String)
-        private data class WSResponseAnnounce(val type: String = "announce_ack")
-        private data class WSResponseError(val reason: String, val type: String = "error")
-        private data class WSResponseScore(val score: Int, val type: String = "score")
-
-        // Extension method to make sending messages back simpler.
-        private fun Session.send(obj: Any) {
-            this.remote.sendString(GSON.toJson(obj))
-        }
     }
 
 }

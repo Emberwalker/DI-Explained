@@ -36,18 +36,22 @@ Useful things to note at this point:
     - In particular, we stuff this UUID into a cookie so the WebSocket code client-side can identify to the server.
 
 ## WebSocket Handling
-Next open `io.drakon.uod.di_explained.handlers.ClickerWebSocket` and look at the structure.
+Next open the classes in `io.drakon.uod.di_explained.handlers` and look at the structure of each.
 
-As in our Main class, we have some basic essentials - a `LOGGER` object, and a bundle of methods.The `WebSocket`
-annotations are what Spark uses to identify which methods to call on events. In particular, make sure you understand
-the `connected` and `message` methods.
+In some of the classes, we have some basic essentials - a `LOGGER` object, and a bundle of methods. The `WebSocket`
+annotations are what Spark uses to identify which methods to call on events in `ClickerWebSocket`. In particular, make
+sure you understand the `ClickerWebSocket#message` method.
 
-In the `companion object` (the Kotlin equivalent of statics) you'll see a few Kotlin specific items. Data classes are
-what Java programmers tend to refer to as POJOs - simple objects whose sole purpose is to hold data. You'll also see
-that there's a method whose signature looks like `fun Session.send(...)` - this is an _extension method_, which attaches
-the defined method to an existing class defined elsewhere, in this case the Jetty session. Understanding extension
-methods is not important for this tutorial, but if you want to learn more, check out the
+In the `DataClasses.kt` file you'll see a few Kotlin specific items. Data classes are what Java programmers tend to
+refer to as POJOs - simple objects whose sole purpose is to hold data. In `io.drakon.uod.di_explained.Extensions.kt`,
+you'll also see that there's a method whose signature looks like `fun Session.send(...)` - this is an _extension
+method_, which attaches the defined method to an existing class defined elsewhere, in this case the Jetty session.
+Understanding extension methods is not important for this tutorial, but if you want to learn more, check out the
 [Kotlin documentation on the topic.](https://kotlinlang.org/docs/reference/extensions.html)
+
+Other than that, you'll see that as much as possible behaviour is defined by _interfaces_ rather than concrete
+implementations, but not they are currently untestable as they have hard references to implementations, such as for the
+`IClickerStore` implementation being hardcoded to create a SQLite data store. We'll fix this with dependency injection!
 
 ## What Next?
 Next we'll take a look at the theory behind Dependency Injection, and its parent concept Inversion of Control.

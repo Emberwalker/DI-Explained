@@ -1,5 +1,8 @@
 package io.drakon.uod.di_explained
 
+import com.google.gson.GsonBuilder
+import org.eclipse.jetty.websocket.api.Session
+
 /**
  * Extension methods not provided by Kotlin stdlib.
  */
@@ -23,4 +26,11 @@ inline fun <T : AutoCloseable, R> T.use(block: (T) -> R): R {
             this.close()
         }
     }
+}
+
+
+// Extension method to make sending messages back over websockets simpler.
+private val GSON = GsonBuilder().setPrettyPrinting().create()
+fun Session.send(obj: Any) {
+    this.remote.sendString(GSON.toJson(obj))
 }
