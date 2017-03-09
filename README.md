@@ -33,7 +33,7 @@ your own risk, and expect to troubleshoot.
 2. On Windows, run `.\gradlew.bat eclipse`, on Mac/Linux run `./gradlew eclipse`
 3. Open the sample directory in Eclipse.
 
-### Netbreans (Not Supported)
+### Netbeans (Not Supported)
 If you _really_ want to use Netbeans, there is a Gradle plugin available for it, but support will _not_ be given for it.
 Use at your own risk.
 
